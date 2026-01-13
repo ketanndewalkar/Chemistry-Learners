@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "signika";
+  src: url("/src/assets/Signika-SemiBold.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x:hidden;
+  font-family: 'signika', sans-serif;
+}
+
+
+
+@theme{
+  --breakpoint-*:initial;
+  --breakpoint-sm:640px;
+  --breakpoint-md:768px;
+  --breakpoint-lg:1024px;
+}
+
+@layer utilities {
+  .text-signika {
+    font-family: "signika", sans-serif;
+  }
+  .remains{
+    @apply h-[calc(89vh-clamp(4rem,6vw,7rem))];
+    @apply max-md:h-fit;
+  }
+}

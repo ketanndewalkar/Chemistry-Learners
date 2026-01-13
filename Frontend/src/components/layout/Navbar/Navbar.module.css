@@ -1,0 +1,66 @@
+@reference "@/index.css";
+.navbar {
+  /* Base Desktop Styles */
+  @apply relative flex items-center justify-between px-10 py-4 bg-white font-sans border-b border-transparent;
+  /* Mobile Overrides */
+  @apply max-md:px-6 max-md:border-gray-50;
+}
+
+.brandWrapper {
+  @apply flex items-center gap-3 z-50;
+}
+
+.logoCircle {
+  @apply w-10 h-10 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0;
+  background: linear-gradient(45deg, #34d399, #3b82f6);
+}
+
+.brandName {
+  @apply text-[#0f172a] text-xl font-bold whitespace-nowrap;
+  @apply max-md:text-lg;
+}
+
+/* Navigation Container */
+.desktopNav {
+  @apply flex items-center gap-8 ;
+  @apply max-md:hidden; /* Hide desktop nav on mobile */
+}
+
+.navLinks {
+  @apply flex items-center gap-4;
+}
+
+.navItem {
+  @apply px-5 py-2 border border-gray-100 rounded-2xl text-[#1e293b] text-sm font-medium transition-colors;
+}
+
+.navItem:hover {
+  @apply bg-gray-50;
+}
+
+.loginButton {
+  @apply flex items-center gap-2 bg-[#007bff] text-white px-6 py-3 rounded-2xl font-semibold transition-opacity whitespace-nowrap;
+}
+
+.loginButton:hover {
+  @apply opacity-90;
+}
+
+/* Mobile Specific Elements */
+.mobileMenuBtn {
+  @apply hidden z-50 text-[#0f172a] focus:outline-none;
+  @apply max-md:block; /* Show only on mobile */
+}
+
+.mobileMenu {
+  @apply absolute top-full left-0 w-full bg-white border-t border-gray-100 flex flex-col p-6 gap-4 shadow-xl z-40;
+  /* This class is only rendered in JSX if isOpen is true, but we ensure it behaves correctly */
+}
+
+.mobileNavItem {
+  @apply text-[#1e293b] text-lg font-medium py-3 border-b border-gray-50;
+}
+ 
+.loginButtonFull {
+  @apply flex items-center justify-center gap-2 bg-[#007bff] text-white px-6 py-4 rounded-2xl font-semibold mt-2;
+}
