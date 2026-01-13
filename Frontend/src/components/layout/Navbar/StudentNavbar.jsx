@@ -1,7 +1,7 @@
 import React from "react";
 import { FiMenu } from "react-icons/fi";
 import UserProfileMenu from "../../ui/UserProfileMenu";
-import logo from "../../../../public/logo.png"
+import logo from "../../../../public/logo1.png"
 const StudentNavbar = ({ user, onSidebarToggle }) => {
   return (
     <nav
