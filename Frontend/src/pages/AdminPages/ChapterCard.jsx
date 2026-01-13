@@ -62,7 +62,42 @@ const ChapterCard = ({ chapter, onDelete, onLocalUpdate, onSaveTitle }) => {
       setLoading(false);
     }
   };
+const deleteLesson = async (lessonId) => {
+    if (!lessonId) return;
 
+    setLoading(true);
+
+    const previousLessons = chapter.lessons || [];
+
+    const updatedLessons = previousLessons.filter(
+      (l) => l._id !== lessonId
+    );
+
+    onLocalUpdate(chapter._id, {
+      lessons: updatedLessons,
+    });
+
+    const isTempLesson = lessonId.toString().length !== 24;
+    if (isTempLesson) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/lessons/${lessonId}`,
+        { withCredentials: true }
+      );
+    } catch (error) {
+      console.error("Failed to delete lesson:", error);
+
+      onLocalUpdate(chapter._id, {
+        lessons: previousLessons,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <section
@@ -113,6 +148,7 @@ const ChapterCard = ({ chapter, onDelete, onLocalUpdate, onSaveTitle }) => {
               chapterId={chapter._id}
               lessons={chapter.lessons}
               onLocalUpdate={onLocalUpdate}
+              onDeleteLesson={deleteLesson}
             />
           ))}
 
