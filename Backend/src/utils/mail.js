@@ -10,7 +10,7 @@ export const sendVerificationEmail = async (email, emailVerificationToken) => {
   const emailUrl = `${process.env.BASE_URL}/api/v1/auth/verify/${emailVerificationToken}`;
 
   const {data,error} = await resend.emails.send({
-    from: "ChemistryLearners <onboarding@resend.dev>",
+    from: "ChemistryLearners <no-reply@chemistrylearners.com>",
     to: email,
     subject: "Verify your email",
     html: `
