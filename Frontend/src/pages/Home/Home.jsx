@@ -1,14 +1,52 @@
-import React, { useEffect } from "react";
-import { IoPlay } from "react-icons/io5";
+import React, { useEffect, useRef, useState } from "react";
+import { IoPlay, IoChevronBack, IoChevronForward, IoClose } from "react-icons/io5";
 import FeaturesBox from "../../components/ui/FeaturesBox";
 import MentionedCourses from "../../components/ui/MentionedCourses";
 import Faculty from "../../components/ui/Faculty";
 import { Toaster } from "../../utils/toaster";
-import {useAuth} from "../../Context/AuthContext"
-import {useNavigate} from "react-router-dom"
+import { useAuth } from "../../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+const DEMO_VIDEOS = [
+  "./video1.mp4",
+  "./video2.mp4",
+  "./video3.mp4",
+  "./video4.mp4",
+  
+];
+
 const Home = () => {
-  const {user,roleRoute} = useAuth();
+  const { user, roleRoute } = useAuth();
   const navigate = useNavigate();
+
+  /* ---------------- DEMO VIDEO LOGIC ---------------- */
+  const [openDemo, setOpenDemo] = useState(false);
+  const [current, setCurrent] = useState(0);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (!openDemo || !videoRef.current) return;
+
+    videoRef.current.load();
+    videoRef.current.play();
+
+    const handleEnded = () => {
+      setCurrent((prev) => (prev + 1) % DEMO_VIDEOS.length);
+    };
+
+    videoRef.current.addEventListener("ended", handleEnded);
+    return () =>
+      videoRef.current?.removeEventListener("ended", handleEnded);
+  }, [current, openDemo]);
+
+  const next = () =>
+    setCurrent((prev) => (prev + 1) % DEMO_VIDEOS.length);
+
+  const prev = () =>
+    setCurrent((prev) =>
+      prev === 0 ? DEMO_VIDEOS.length - 1 : prev - 1
+    );
+
   return (
     <>
       <div className="border relative overflow-x-hidden border-gray-200 w-full px-[clamp(1rem,4vw,3rem)] py-[clamp(1rem,2vw,3rem)] bg-gray-100">
@@ -24,78 +62,31 @@ const Home = () => {
                   <span className="text-blue-500">Chemistry</span>.
                 </h1>
               </div>
+
               <p className="font-semibold text-signika text-gray-600 text-[clamp(1rem,2.5vw,1.25rem)] max-md:text-[clamp(0.875rem,2.2vw,1rem)] text-pretty">
                 Interactive learning designed to turn confusion into clarity,
                 one concept at a time.
               </p>
-              <div
-                className="
-    flex
-    gap-[clamp(0.75rem,2vw,1.5rem)]
-    mt-[clamp(1rem,2.5vw,2rem)]
-    text-signika
-  "
-              >
-                {/* Primary CTA */}
-                <button onClick={()=>navigate(roleRoute[user.role])}
-                  className="
-      flex
-      items-center
-      justify-center
-      gap-[clamp(0.4rem,0.8vw,0.6rem)]
 
-      px-[clamp(1rem,2vw,1.5rem)]
-      py-[clamp(0.5rem,1vw,0.75rem)]
-
-      rounded-full
-      border
-      border-gray-300
-
-      text-[clamp(0.875rem,1vw,1rem)]
-      font-semibold
-      text-gray-800
-
-      transition-all
-      hover:bg-gray-100
-      active:scale-[0.97]
-    "
+              <div className="flex gap-[clamp(0.75rem,2vw,1.5rem)] mt-[clamp(1rem,2.5vw,2rem)] text-signika">
+                <button
+                  onClick={() => navigate(roleRoute[user.role])}
+                  className="flex items-center justify-center px-[clamp(1rem,2vw,1.5rem)] py-[clamp(0.5rem,1vw,0.75rem)] rounded-full border border-gray-300 font-semibold text-gray-800 transition-all hover:bg-gray-100 active:scale-[0.97]"
                 >
                   Start Learning
                 </button>
 
-                {/* Secondary CTA */}
+                {/* UPDATED DEMO CTA */}
                 <button
-                  className="
-      flex
-      items-center
-      justify-center
-      gap-[clamp(0.4rem,0.8vw,0.6rem)]
-
-      px-[clamp(1rem,2vw,1.5rem)]
-      py-[clamp(0.5rem,1vw,0.75rem)]
-
-      rounded-full
-      border
-      border-blue-500
-      bg-blue-500
-
-      text-[clamp(0.875rem,1vw,1rem)]
-      font-semibold
-      text-white
-
-      transition-all
-      hover:bg-blue-600
-      active:scale-[0.97]
-    "
+                  onClick={() => setOpenDemo(true)}
+                  className="flex items-center gap-2 px-[clamp(1rem,2vw,1.5rem)] py-[clamp(0.5rem,1vw,0.75rem)] rounded-full border border-blue-500 bg-blue-500 font-semibold text-white transition-all hover:bg-blue-600 active:scale-[0.97]"
                 >
-                  <IoPlay
-                    className="
-        size-[clamp(1rem,1.8vw,1.25rem)]"
-                  />
-                  Demo Video
+                  <IoPlay className="text-lg" />
+                  Concept Walkthrough
                 </button>
               </div>
             </div>
+
             <div className="w-[40%] h-full p-[1vw] flex items-centers max-md:w-full max-md:h-[40vh]">
               <img
                 src="./posternew.png"
@@ -104,57 +95,103 @@ const Home = () => {
             </div>
           </div>
         </div>
-        <div
-          className="
-          max-md:hidden
-        bottom-0
-        left-0
-        w-full
+
+        <FeaturesBox />
+        <Faculty />
+      </div>
+
+      {/* ---------------- DEMO VIDEO MODAL ---------------- */}
+      {openDemo && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm px-3 max-md:px-2">
+    <div
+      className="
+        relative
+        w-[72%]
+        max-w-[1100px]
+        aspect-video
+        max-md:w-full
+        max-md:aspect-[9/16]
+        bg-[#0b1220]
+        rounded-2xl
+        shadow-2xl
         overflow-hidden
-        leading-[0]
-        rotate-180
+        flex
+        items-center
+        justify-center
       "
-        >
-          <svg
-            viewBox="0 0 1200 120"
-            preserveAspectRatio="none"
-            className="
-          relative
-          block
-          w-[calc(100%+1.3px)]
-          h-[61px]
-          rotate-y-180
-        "
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
-              opacity="0.25"
-              className="fill-[#1451F0]"
-            />
-            <path
-              d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z"
-              opacity="0.5"
-              className="fill-[#1451F0]"
-            />
-            <path
-              d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z"
-              className="fill-[#1451F0]"
-            />
-          </svg>
-        </div>
+    >
+      {/* Progress Indicators */}
+      <div className="absolute top-3 left-3 right-3 flex gap-2 z-30">
+        {DEMO_VIDEOS.map((_, i) => (
+          <div
+            key={i}
+            className={`h-[3px] flex-1 rounded-full transition-all duration-300 ${
+              i === current ? "bg-blue-500" : "bg-white/25"
+            }`}
+          />
+        ))}
+      </div>
 
-        {/* Feature Section */}
-        <FeaturesBox/>
-
-        {/* Courses */}
-        {/* <MentionedCourses/> */}
-
-        {/* Faculty */}
-        <Faculty/>
-
+      {/* Aspect Ratio Wrapper */}
+      <div className="relative w-full h-full">
+        <video
+  ref={videoRef}
+  src={DEMO_VIDEOS[current]}
+  className="absolute inset-0 w-full h-full object-contain bg-black"
+  playsInline
+  controls={false}
+/>
 
       </div>
+
+      {/* Prev Button */}
+      <button
+        onClick={prev}
+        className="
+          absolute left-3 top-1/2 -translate-y-1/2
+          bg-white/10 backdrop-blur-md
+          p-3 rounded-full
+          hover:bg-white/20
+          transition
+          z-30
+        "
+      >
+        <IoChevronBack className="text-white text-xl" />
+      </button>
+
+      {/* Next Button */}
+      <button
+        onClick={next}
+        className="
+          absolute right-3 top-1/2 -translate-y-1/2
+          bg-white/10 backdrop-blur-md
+          p-3 rounded-full
+          hover:bg-white/20
+          transition
+          z-30
+        "
+      >
+        <IoChevronForward className="text-white text-xl" />
+      </button>
+
+      {/* Close */}
+      <button
+        onClick={() => setOpenDemo(false)}
+        className="
+          absolute top-3 right-3
+          bg-white/10 backdrop-blur-md
+          p-2 rounded-full
+          hover:bg-white/20
+          transition
+          z-30
+        "
+      >
+        <IoClose className="text-white text-lg" />
+      </button>
+    </div>
+  </div>
+)}
+
     </>
   );
 };

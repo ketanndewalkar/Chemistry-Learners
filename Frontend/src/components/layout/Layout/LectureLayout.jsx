@@ -18,7 +18,22 @@ const LectureLayout = () => {
   const [progressMap, setProgressMap] = useState({});
   const [loading, setLoading] = useState(true);
   const [isPurchased, setIsPurchased] = useState(null);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
 
+    const runLogic = (e) => {
+      if (e.matches) {
+        setIsSidebarOpen(true);
+      }
+    };
+
+    // initial check
+    if (mq.matches) setIsSidebarOpen(true);
+
+    mq.addEventListener("change", runLogic);
+
+    return () => mq.removeEventListener("change", runLogic);
+  }, []);
   /* ================= CHECK ENROLLMENT ================= */
   useEffect(() => {
     if (authLoading) return;
@@ -29,7 +44,7 @@ const LectureLayout = () => {
     }
 
     const purchased = user.enrolledCourses.some(
-      (e) => String(e?.courses) === String(courseId)
+      (e) => String(e?.courses) === String(courseId),
     );
 
     setIsPurchased(purchased);
@@ -51,13 +66,13 @@ const LectureLayout = () => {
         /* === Course === */
         const courseRes = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/courses/${courseId}`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         /* === Chapters === */
         const chapterRes = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/chapters/${courseId}/all`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         const chaptersData = chapterRes.data.data || [];
@@ -67,9 +82,9 @@ const LectureLayout = () => {
           chaptersData.map((chapter) =>
             axios.get(
               `${import.meta.env.VITE_BACKEND_URL}/api/v1/lessons/${chapter._id}/all`,
-              { withCredentials: true }
-            )
-          )
+              { withCredentials: true },
+            ),
+          ),
         );
 
         const lessonMap = {};
@@ -80,7 +95,7 @@ const LectureLayout = () => {
         /* === Progress === */
         const progressRes = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/course-progress/course/${courseId}`,
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         setCourse(courseRes.data.data);
@@ -126,7 +141,7 @@ const LectureLayout = () => {
         />
 
         <main className="flex-1 overflow-y-auto p-6 max-md:p-4">
-          <Outlet context={{course,}}/>
+          <Outlet context={{ course }} />
         </main>
       </div>
     </div>
