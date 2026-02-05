@@ -1,15 +1,11 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import {
-  FaInstagram,
-  FaFacebookF,
-  FaLinkedinIn,
-} from "react-icons/fa";
-import logo from "../../../../public/logo1.png"
+import { FaInstagram, FaFacebookF, FaLinkedinIn } from "react-icons/fa";
+import logo from "../../../../public/logo1.png";
 import { useAuth } from "../../../Context/AuthContext";
 
 const Footer = () => {
-  const {user,roleRoute}  = useAuth();
+  const { user, roleRoute } = useAuth();
   return (
     <footer className="w-full bg-white border-t border-neutral-200">
       {/* ===== Main Footer ===== */}
@@ -54,7 +50,13 @@ const Footer = () => {
           <ul className="flex flex-col gap-2 items-center">
             <FooterNavLink to="/">Home</FooterNavLink>
             <FooterNavLink to="/about">About</FooterNavLink>
-            {user?<FooterNavLink to={`${roleRoute[user.role]}/free-materials`}>Free Material</FooterNavLink>:""}
+            {user ? (
+              <FooterNavLink to={`${roleRoute[user.role]}/free-materials`}>
+                Free Material
+              </FooterNavLink>
+            ) : (
+              ""
+            )}
           </ul>
         </div>
 
@@ -65,9 +67,27 @@ const Footer = () => {
           </h4>
 
           <div className="flex gap-4">
-            <SocialIcon icon={<FaLinkedinIn />} />
-            <SocialIcon icon={<FaInstagram />} />
-            <SocialIcon icon={<FaFacebookF />} />
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.linkedin.com/groups/9558755"
+            >
+              <SocialIcon icon={<FaLinkedinIn />} />
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.instagram.com/chemistry.learners?igsh=MWQzc3hicmJya245MA=="
+            >
+              <SocialIcon icon={<FaInstagram />} />
+            </a>
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.facebook.com/share/16wcQVC5a2/"
+            >
+              <SocialIcon icon={<FaFacebookF />} />
+            </a>
           </div>
         </div>
       </div>
@@ -126,23 +146,18 @@ const FooterNavLink = ({ to, children }) => (
 );
 
 const SocialIcon = ({ icon }) => (
-  <a
-    href="#"
+  <div
     className="
       flex items-center justify-center
       size-9
-
       rounded-full
-      border
-      border-neutral-200
-
+      border border-neutral-200
       text-neutral-600
       hover:text-blue-600
       hover:border-blue-600
-
       transition-colors
     "
   >
     {icon}
-  </a>
+  </div>
 );

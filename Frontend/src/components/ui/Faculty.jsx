@@ -1,6 +1,10 @@
 import React from "react";
 import Sir from "../../../public/sir.jpeg";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../Context/AuthContext";
 const Faculty = () => {
+  const navigate = useNavigate();
+  const { user, roleRoute } = useAuth();
   return (
     <>
       <h1 className="mt-[5vw] text-signika text-gray-800 text-[clamp(1rem,2vw,1.25rem)] font-bold ">
@@ -82,6 +86,12 @@ const Faculty = () => {
                 </button>
 
                 <button
+                  onClick={() => {
+                    console.log("hello")
+                    navigate(
+                      user ? `${roleRoute[user.role]}/courses` : "/auth",
+                    );
+                  }}
                   className="
                   px-[clamp(1.2rem,2vw,1.6rem)]
                   py-[clamp(0.6rem,1vw,0.8rem)]
@@ -142,7 +152,10 @@ const Faculty = () => {
           <div className="flex flex-col gap-4">
             <InfoCard title="Experience" value="12+" />
             <InfoCard title="Students Taught" value="10,000+" />
-            <InfoCard title="Specialization" value="Organic Chemistry, Engineering Chemistry" />
+            <InfoCard
+              title="Specialization"
+              value="Organic Chemistry, Engineering Chemistry"
+            />
           </div>
         </div>
 
@@ -166,10 +179,7 @@ const Faculty = () => {
           >
             <DetailBlock
               title="Qualifications"
-              items={[
-                "M.Sc. Chemistry",
-                "Qualified NET-CSIR with AIR 284",
-              ]}
+              items={["M.Sc. Chemistry", "Qualified NET-CSIR with AIR 284"]}
             />
 
             <DetailBlock

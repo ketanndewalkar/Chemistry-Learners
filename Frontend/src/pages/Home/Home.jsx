@@ -70,7 +70,7 @@ const Home = () => {
 
               <div className="flex gap-[clamp(0.75rem,2vw,1.5rem)] mt-[clamp(1rem,2.5vw,2rem)] text-signika">
                 <button
-                  onClick={() => navigate(roleRoute[user.role])}
+                  onClick={() => navigate(user ? roleRoute[user.role]:"/auth")}
                   className="flex items-center justify-center px-[clamp(1rem,2vw,1.5rem)] py-[clamp(0.5rem,1vw,0.75rem)] rounded-full border border-gray-300 font-semibold text-gray-800 transition-all hover:bg-gray-100 active:scale-[0.97]"
                 >
                   Start Learning
@@ -82,7 +82,7 @@ const Home = () => {
                   className="flex items-center gap-2 px-[clamp(1rem,2vw,1.5rem)] py-[clamp(0.5rem,1vw,0.75rem)] rounded-full border border-blue-500 bg-blue-500 font-semibold text-white transition-all hover:bg-blue-600 active:scale-[0.97]"
                 >
                   <IoPlay className="text-lg" />
-                  Concept Walkthrough
+                  Reviews
                 </button>
               </div>
             </div>
