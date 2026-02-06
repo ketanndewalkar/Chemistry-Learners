@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import gsap from "gsap";
 import { Check, X, Loader2 } from "lucide-react";
@@ -10,10 +10,13 @@ const Verifyemail = () => {
   const iconRef = useRef(null);
   const textRef = useRef(null);
 
-  const {token} = useParams();
+  const { token } = useParams(); // ✅ CORRECT: path param
+  const navigate = useNavigate();
 
   const [status, setStatus] = useState("loading");
-  const [message, setMessage] = useState("We are securely verifying your email.");
+  const [message, setMessage] = useState(
+    "We are securely verifying your email."
+  );
 
   /* ENTRY ANIMATION */
   useEffect(() => {
@@ -29,38 +32,47 @@ const Verifyemail = () => {
     const verify = async () => {
       if (!token) {
         setStatus("error");
-        Toaster("Invalid or missing verification token.","error");
+        setMessage("Invalid or missing verification token.");
+        Toaster("Invalid or missing verification token.", "error");
         return;
       }
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/verify-email`,
-          { params: { token } }
+          `${import.meta.env.VITE_BACKEND_URL}/auth/verify-email/${token}`
         );
 
-        if (res.data.success) {
+        if (res.data?.success) {
           setStatus("success");
           setMessage("Your email address has been verified successfully.");
-          Toaster("Email verified successfully!","success");
+          Toaster("Email verified successfully!", "success");
+
+          // Optional auto-redirect
+          // setTimeout(() => navigate("/auth"), 3000);
         } else {
           throw new Error();
         }
-      } catch (e) {
+      } catch (err) {
         setStatus("error");
         setMessage(
-          e.response?.data?.message ||
+          err.response?.data?.message ||
             "This verification link is invalid or expired."
         );
-        Toaster(e.response?.data?.message || "Verification failed. Please try again.","error");
+        Toaster(
+          err.response?.data?.message ||
+            "Verification failed. Please try again.",
+          "error"
+        );
       }
     };
 
     verify();
   }, [token]);
 
-  /* ICON PULSE */
+  /* ICON + TEXT ANIMATION */
   useEffect(() => {
+    if (!iconRef.current || !textRef.current) return;
+
     gsap.fromTo(
       iconRef.current,
       { scale: 0.85, opacity: 0 },
@@ -83,14 +95,13 @@ const Verifyemail = () => {
         {/* ICON */}
         <div
           ref={iconRef}
-          className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full
-            ${
-              status === "loading"
-                ? "bg-blue-50 text-blue-500"
-                : status === "success"
-                ? "bg-green-50 text-green-500"
-                : "bg-red-50 text-red-500"
-            }`}
+          className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full ${
+            status === "loading"
+              ? "bg-blue-50 text-blue-500"
+              : status === "success"
+              ? "bg-green-50 text-green-500"
+              : "bg-red-50 text-red-500"
+          }`}
         >
           {status === "loading" && (
             <Loader2 className="h-7 w-7 animate-spin" />
@@ -107,28 +118,26 @@ const Verifyemail = () => {
             {status === "error" && "Verification Failed"}
           </h1>
 
-          <p className="text-sm text-[#64748B] mb-8">
-            {message}
-          </p>
+          <p className="text-sm text-[#64748B] mb-8">{message}</p>
         </div>
 
-        {/* ACTION */}
+        {/* ACTIONS */}
         {status === "success" && (
-          <a
-            href="/login"
+          <Link
+            to="/auth"
             className="inline-flex w-full items-center justify-center rounded-lg bg-blue-500 hover:bg-blue-600 transition text-white font-medium py-3"
           >
-            Continue to Dashboard
-          </a>
+            Continue to Login
+          </Link>
         )}
 
         {status === "error" && (
-          <a
-            href="/resend-verification"
+          <Link
+            to="/auth"
             className="inline-flex w-full items-center justify-center rounded-lg border border-slate-200 hover:bg-slate-50 transition text-slate-700 font-medium py-3"
           >
-            Resend Verification Email
-          </a>
+            Go to Login
+          </Link>
         )}
       </div>
     </div>
