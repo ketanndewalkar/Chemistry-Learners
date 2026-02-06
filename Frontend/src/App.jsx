@@ -230,6 +230,7 @@ function App() {
         
       ],
     },
+    {path:"/verify-email/:token",element:<><VerifyEmail/></>},
     { path: "/auth", element: <AuthPage /> },
     { path: "/auth/forget-password", element: <ForgotPassword /> },
   ];
@@ -307,7 +308,7 @@ function App() {
   if (user?.role === "admin") roleRoutes = adminRoutes;
 
   const router = createBrowserRouter([
-    {path:"/verify-email/:token",element:<><VerifyEmail/></>},
+    
     ...publicRoutes,
     ...roleRoutes,
     {
