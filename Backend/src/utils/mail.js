@@ -7,7 +7,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const sendVerificationEmail = async (email, emailVerificationToken) => {
   
-  const emailUrl = `${process.env.BASE_URL}/api/v1/auth/verify/${emailVerificationToken}`;
+  const emailUrl = `${process.env.FRONTEND_URL}/verify-email/${emailVerificationToken}`;
 
   const {data,error} = await resend.emails.send({
     from: "ChemistryLearners <no-reply@chemistrylearners.com>",

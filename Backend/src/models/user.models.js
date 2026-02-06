@@ -48,7 +48,7 @@ const UserSchema = createSchema(
       type: String,
       required: [true, "Phone number is required"],
       trim: true,
-      // match: [/^(?:\+91|91)?[6-9]\d{9}$/, "Enter a valid phone number"],
+      match: [/^(?:\+91|91)?[6-9]\d{9}$/, "Enter a valid phone number"],
       unique: true,
     },
     role: {
