@@ -42,7 +42,7 @@ const VerifyEmail = () => {
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify/${token}`
         );
 
-        if (res.data?.status === 200) {
+        if (res.data?.success === true) {
           setStatus("success");
           setMessage(res.data.message || "Email verified successfully.");
           Toaster("Email verified successfully!", "success");
