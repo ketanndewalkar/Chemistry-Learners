@@ -64,7 +64,7 @@ const Profile = () => {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/resendemail`, {withCredentials: true});
       Toaster(res.data.message, "success");
     } catch (error) {
-      Toaster("Failed to send verification email", "error");
+      Toaster(error.response?.data?.message || "Error sending verification email", "error");
     } finally {
       setVerifyLoading(false);
     }

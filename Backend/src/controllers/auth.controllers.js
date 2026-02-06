@@ -139,69 +139,44 @@ export const logOut = asyncHandler(async (req, res) => {
 });
 
 export const emailVerification = asyncHandler(async (req, res) => {
-
   const token = req.params.token;
 
-  const hashedToken = crypto
-     .createHash("sha256")
-     .update(token)
-     .digest("hex");
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
 
-  // 1️⃣ Normal verification try
   let user = await User.findOne({
     emailVerificationToken: hashedToken,
     emailVerificationTokenExpiry: { $gt: Date.now() },
   });
 
-  // 2️⃣ Agar token se user nahi mila
   if (!user) {
-
-    // 🔥 Check – koi user already verified to nahi?
     const alreadyVerified = await User.findOne({
-      isEmailVerified: true
+      isEmailVerified: true,
     });
 
     if (alreadyVerified) {
-      return res.status(200).json(
-        new ApiResponse(
-          200,
-          "Email already verified",
-          null
-        )
-      );
+      return res
+        .status(200)
+        .json(new ApiResponse(200, "Email already verified", null));
     }
 
     throw new ApiError(400, "Invalid or expired token");
   }
 
-  // 3️⃣ First time verification
   user.isEmailVerified = true;
   user.emailVerificationToken = undefined;
   user.emailVerificationTokenExpiry = undefined;
 
   await user.save({ validateBeforeSave: false });
 
-  return res.status(200).json(
-    new ApiResponse(
-      200,
-      "Email verified successfully",
-      null
-    )
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Email verified successfully", null));
 });
 
-
-
-
 export const resendEmailVerification = asyncHandler(async (req, res) => {
- 
   const id = req.user._id;
 
-  const user = await User.findById(id).select(
-    "-password -refreshToken"
-  );
-
- 
+  const user = await User.findById(id).select("-password -refreshToken");
 
   if (!user) {
     throw new ApiError(401, "Invalid token");
@@ -211,33 +186,25 @@ export const resendEmailVerification = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Email already verified");
   }
 
-  const emailVerificationToken =
-      crypto.randomBytes(32).toString("hex");
+  const emailVerificationToken = crypto.randomBytes(32).toString("hex");
 
   const hashedemailVerificationToken = crypto
     .createHash("sha256")
     .update(emailVerificationToken)
     .digest("hex");
 
-
-
   user.emailVerificationToken = hashedemailVerificationToken;
 
-  user.emailVerificationTokenExpiry =
-      new Date(Date.now() + 10 * 60 * 1000);
+  user.emailVerificationTokenExpiry = new Date(Date.now() + 10 * 60 * 1000);
 
   await user.save({ validateBeforeSave: false });
 
-  await sendVerificationEmail(
-      user.email,
-      emailVerificationToken   
-  );
+  await sendVerificationEmail(user.email, emailVerificationToken);
 
-  return res.status(200).json(
-    new ApiResponse(200, "Email Verification link sent")
-  );
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Email Verification link sent"));
 });
-
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
