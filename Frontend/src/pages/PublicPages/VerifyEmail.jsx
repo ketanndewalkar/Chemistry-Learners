@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { Check, X, Loader2 } from "lucide-react";
 import { Toaster } from "../../utils/toaster";
 
-const Verifyemail = () => {
+const VerifyEmail = () => {
   const containerRef = useRef(null);
   const iconRef = useRef(null);
   const textRef = useRef(null);
@@ -144,4 +144,4 @@ const Verifyemail = () => {
   );
 };
 
-export default Verifyemail;
+export default VerifyEmail;
