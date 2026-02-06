@@ -2,6 +2,7 @@ import React from "react";
 import { FiMenu } from "react-icons/fi";
 import UserProfileMenu from "../../ui/UserProfileMenu";
 import logo from "../../../../public/logo1.png"
+import { Link } from "react-router-dom";
 const AdminNavbar = ({ onSidebarToggle }) => {
   return (
     <nav
@@ -40,14 +41,14 @@ const AdminNavbar = ({ onSidebarToggle }) => {
           </button>
 
           {/* Brand */}
-          <div className="flex items-center gap-[clamp(0.4rem,1vw,0.6rem)]">
+          <Link to="/" className="flex items-center gap-[clamp(0.4rem,1vw,0.6rem)]">
             <img
               src={logo}
               alt="Admin Logo"
               className="h-[clamp(2.2rem,3vw,2.6rem)] mix-blend-multiply"
             />
 
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="flex items-center gap-2">
               <span
                 className="
                   font-signika font-semibold
@@ -64,7 +65,7 @@ const AdminNavbar = ({ onSidebarToggle }) => {
                 ADMIN
               </span>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* ===== RIGHT SECTION ===== */}

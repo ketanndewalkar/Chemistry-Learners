@@ -45,31 +45,31 @@ export const AuthProvider = ({ children }) => {
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/users/profile`,
           { withCredentials: true }
         );
-        console.log(meRes)
+        
         if (meRes?.data?.data) {
           setUser(meRes.data.data);
           return;
         }
       } catch (error) {
-        console.log(error)
+        
         const status = error?.response?.status;
         const message = error?.response?.data?.errors[0];
 
         // 2️⃣ Access token expired → refresh
         if (status === 401 && message === "Access token expired") {
-          console.log("hello")
+          
           try {
             const refreshRes = await axios.get(
               `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/refreshtoken`,
               { withCredentials: true }
             );
-            console.log(refreshRes)
+           
             if (refreshRes?.data?.data) {
               setUser(refreshRes.data.data);
               return;
             }
           } catch (refreshError) {
-            console.log(refreshError);
+            
             // Refresh token invalid / expired
             setUser(null);
             localStorage.removeItem("user");

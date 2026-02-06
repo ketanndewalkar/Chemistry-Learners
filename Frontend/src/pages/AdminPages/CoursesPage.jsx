@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { FiSearch, FiPlus, FiEdit3, FiTrash2, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import BackButton from "../../components/ui/BackButton";
+import { Toaster } from "../../utils/toaster";
 
 /* ================= STATUS STYLES ================= */
 const statusStyles = {
@@ -140,7 +141,10 @@ const CoursesPage = () => {
         { withCredentials: true }
       );
     } catch (error) {
-      console.error("Status update failed", error);
+      Toaster(
+        error.response?.data?.message || "Failed to update status.",
+        "error"
+      );
       setCourses(snapshot);
     }
   };
@@ -161,7 +165,10 @@ const CoursesPage = () => {
       );
       setDeleteTarget(null);
     } catch (error) {
-      console.error("Delete failed", error);
+      Toaster(
+        error.response?.data?.message || "Failed to delete course.",
+        "error"
+      );
       setCourses(snapshot);
     } finally {
       setDeleting(false);
@@ -178,7 +185,11 @@ const CoursesPage = () => {
       );
       setCourses(res.data.data);
     } catch (error) {
-      console.log(error);
+      Toaster(
+        error.response?.data?.message || "Failed to fetch courses.",
+        "error"
+      );
+      setCourses([]);
     } finally {
       setLoading(false);
     }

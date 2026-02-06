@@ -88,7 +88,7 @@ export const AuthLoginHandler = async (
     ) {
       throw error; // 👈 IMPORTANT
     }else{
-      console.log("hii")
+      
       Toaster(message || "Login failed", "error");
     }
 

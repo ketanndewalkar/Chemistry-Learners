@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import PreviewMaterialModal from "./PreviewMaterialModal";
 import EditMaterialModal from "./EditMaterialModal";
 import BackButton from "../../components/ui/BackButton";
+import { Toaster } from "../../utils/toaster";
 
 const CourseMaterialsPage = () => {
   const { lessonId,courseId,chapterId } = useParams();
@@ -28,7 +29,12 @@ const CourseMaterialsPage = () => {
         );
         setMaterials(res.data.data || []);
       } catch (err) {
-        console.error("Failed to fetch materials", err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch materials.",
+          "error"
+        );
+       
+       setMaterials([]);
       } finally {
         setLoading(false);
       }

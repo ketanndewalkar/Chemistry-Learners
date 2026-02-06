@@ -20,7 +20,7 @@ const MyPurchases = () => {
     }
 
     const fetchPurchasedCourses = async () => {
-      console.log(user.enrolledCourses)
+      
       try {
         setLoading(true);
 
@@ -31,7 +31,7 @@ const MyPurchases = () => {
               `${import.meta.env.VITE_BACKEND_URL}/api/v1/courses/${courseId}`,
               { withCredentials: true }
             );
-            console.log(courseRes)
+            
             /* === Chapters === */
             const chapterRes = await axios.get(
               `${import.meta.env.VITE_BACKEND_URL}/api/v1/chapters/${courseId}/all`,
@@ -81,7 +81,7 @@ const MyPurchases = () => {
         );
         setCourses(results);
       } catch (error) {
-        console.log(error)
+        
         Toaster("Failed to load purchased courses", "error");
       } finally {
         setLoading(false);

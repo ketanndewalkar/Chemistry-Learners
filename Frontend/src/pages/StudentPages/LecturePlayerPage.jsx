@@ -6,7 +6,7 @@ import { Toaster } from "../../utils/toaster";
 const LecturePlayerPage = () => {
   const { lessonId } = useParams();
   const {course} = useOutletContext();
-  console.log(course)
+  
   const [materials, setMaterials] = useState([]);
   const [resolvedMaterials, setResolvedMaterials] = useState([]);
 
@@ -32,7 +32,11 @@ const LecturePlayerPage = () => {
         );
         setMaterials(res.data.data || []);
       } catch (err) {
-        console.log(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch materials.",
+          "error"
+        );
+        
       } finally {
         setLoading(false);
       }
@@ -72,7 +76,10 @@ const LecturePlayerPage = () => {
         );
         setActiveVideo(firstVideo || null);
       } catch (err) {
-        console.log(err);
+        Toaster(
+          err.response?.data?.message || "Failed to resolve material URLs.",
+          "error"
+        );
       } finally {
         setAccessLoading(false);
       }
@@ -105,9 +112,13 @@ const LecturePlayerPage = () => {
         )
       );
       Toaster("Marked as Complete.","success")
-      console.log("All materials marked as complete");
+      
     } catch (error) {
-      console.log("Failed to mark materials complete", error);
+      Toaster(
+        error.response?.data?.message || "Failed to mark as complete.",
+        "error"
+      );
+      
     } finally {
       setMarkingComplete(false);
     }

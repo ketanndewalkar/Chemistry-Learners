@@ -25,7 +25,7 @@ export const fetchCourseDetails = async (
 
     setchapters(chaptersWithLessons);
   } catch (error) {
-    console.log(error);
+    
   } finally {
     setloading(false);
   }
@@ -50,7 +50,7 @@ const fetchAllLessonsDetails = async (chapters) => {
             lessons: res.data.data,
           };
         } catch (error) {
-          console.log(error);
+          
 
           return {
             ...chapter,
@@ -62,14 +62,14 @@ const fetchAllLessonsDetails = async (chapters) => {
 
     return results;
   } catch (error) {
-    console.log(error);
+    
     return chapters;
   }
 };
 
 export const addChapter = async (setchapters,courseId) => {
   const tempid = Date.now();
-  console.log("hello")
+  
   setchapters((prev) => [...prev, { _id: tempid, title: "" }]);
   try {
     const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/chapters/${courseId}`, { title: "New Chapter" }, { withCredentials: true });

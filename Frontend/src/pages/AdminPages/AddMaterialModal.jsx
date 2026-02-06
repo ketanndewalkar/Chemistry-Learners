@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { Toaster } from "../../utils/toaster";
 
 const AddMaterialModal = ({ lessonId, onClose, onAdded }) => {
   const [title, setTitle] = useState("");
@@ -54,7 +55,10 @@ const AddMaterialModal = ({ lessonId, onClose, onAdded }) => {
       onAdded(res.data.data);
       onClose();
     } catch (err) {
-      console.error("Failed to add material", err);
+      Toaster(
+        err.response?.data?.message || "Failed to add material. Please try again.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }

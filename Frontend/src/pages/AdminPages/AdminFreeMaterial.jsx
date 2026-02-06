@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Toaster } from "../../utils/toaster";
 
 const AdminFreeMaterial = () => {
   const [materials, setMaterials] = useState([]);
@@ -30,7 +31,10 @@ const AdminFreeMaterial = () => {
       );
       setMaterials(res.data?.data || []);
     } catch (err) {
-      console.error(err);
+      Toaster(
+        err.response?.data?.message || "Failed to fetch materials.",
+        "error"
+      );
     } finally {
       setLoading(false);
     }
@@ -87,7 +91,10 @@ const AdminFreeMaterial = () => {
 
       fetchMaterials();
     } catch (err) {
-      console.error(err);
+      Toaster(
+        err.response?.data?.message || "Failed to upload material.",
+        "error"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -103,7 +110,10 @@ const AdminFreeMaterial = () => {
       );
       fetchMaterials();
     } catch (err) {
-      console.log(err);
+      Toaster(
+        err.response?.data?.message || "Failed to delete material.",
+        "error"
+      );
     } finally {
       setDeletingId(null);
     }

@@ -126,7 +126,7 @@ const Profile = () => {
         confirmPassword: "",
       });
     } catch (error) {
-      console.error("Profile update failed:", error);
+      
       Toaster(error.response.data.errors[0]||"Error", "error");
     } finally {
       setLoading(false);

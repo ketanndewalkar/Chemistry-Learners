@@ -2,6 +2,7 @@ import React from "react";
 import { FiMenu } from "react-icons/fi";
 import UserProfileMenu from "../../ui/UserProfileMenu";
 import logo from "../../../../public/logo1.png"
+import { Link } from "react-router-dom";
 const StudentNavbar = ({ user, onSidebarToggle }) => {
   return (
     <nav
@@ -42,7 +43,7 @@ const StudentNavbar = ({ user, onSidebarToggle }) => {
           </button>
 
           {/* Brand */}
-          <div className="flex items-center gap-[clamp(0.4rem,1vw,0.6rem)]">
+          <Link to="/" className="flex items-center gap-[clamp(0.4rem,1vw,0.6rem)]">
             <img
               src={logo}
               alt=""
@@ -59,7 +60,7 @@ const StudentNavbar = ({ user, onSidebarToggle }) => {
             >
               Chemistry Learners
             </span>
-          </div>
+          </Link>
         </div>
 
         {/* ===== RIGHT: PROFILE MENU ===== */}

@@ -87,7 +87,7 @@ const Faculty = () => {
 
                 <button
                   onClick={() => {
-                    console.log("hello")
+                    
                     navigate(
                       user ? `${roleRoute[user.role]}/courses` : "/auth",
                     );

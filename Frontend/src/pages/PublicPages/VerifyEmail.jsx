@@ -39,7 +39,7 @@ const VerifyEmail = () => {
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/verify-email/${token}`
+          `${import.meta.env.VITE_BACKEND_URL}/auth/verify/${token}`
         );
 
         if (res.data?.success) {
@@ -47,8 +47,6 @@ const VerifyEmail = () => {
           setMessage("Your email address has been verified successfully.");
           Toaster("Email verified successfully!", "success");
 
-          // Optional auto-redirect
-          // setTimeout(() => navigate("/auth"), 3000);
         } else {
           throw new Error();
         }

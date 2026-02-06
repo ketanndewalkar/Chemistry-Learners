@@ -55,7 +55,10 @@ const CourseDetailPage = () => {
           );
         }
       } catch (err) {
-        console.error(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch course details.",
+          "error"
+        );
       } finally {
         setLoadingCourse(false);
       }
@@ -78,7 +81,10 @@ const CourseDetailPage = () => {
         setChapters(res.data.data);
         setChaptersFetched(true);
       } catch (err) {
-        console.error(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch chapters.",
+          "error"
+        );
       } finally {
         setLoadingTab(false);
       }
@@ -102,7 +108,7 @@ const CourseDetailPage = () => {
             )
           )
         );
-        console.log(responses)
+        
         const mapped = {};
         responses.forEach((res, idx) => {
           mapped[chapters[idx]._id] = res.data.data;
@@ -111,7 +117,11 @@ const CourseDetailPage = () => {
         setLessonsMap(mapped);
         setLessonsFetched(true);
       } catch (err) {
-        console.error(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch lessons.",
+          "error"
+        );
+        
       } finally {
         setLoadingTab(false);
       }
@@ -143,7 +153,11 @@ const CourseDetailPage = () => {
         setResources(responses.flatMap((r) => r.data.data));
         setResourcesFetched(true);
       } catch (err) {
-        console.error(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch resources.",
+          "error"
+        );
+       
       } finally {
         setLoadingTab(false);
       }
@@ -171,7 +185,7 @@ const CourseDetailPage = () => {
       const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payments/create-order/${courseId}`,{amount:course.courseFees},{
         withCredentials:true
       })
-      console.log(res);
+      
       const {amount,orderId} = res.data.data;
       var options = {
     "key": import.meta.env.VITE_RAZORPAY_KEY_ID, // Enter the Key ID generated from the Dashboard
@@ -187,7 +201,7 @@ const CourseDetailPage = () => {
           const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/payments/verify-payment`,response,{
             withCredentials:true
           })
-          console.log(res)
+          
           setIsPurchased(true)
           setLoading(true)
           Toaster("Purchased Course Successfully","success")
@@ -195,7 +209,7 @@ const CourseDetailPage = () => {
           setLoading(false);
         } catch (error) {
           Toaster("Payment Invalid","error")
-          console.log(error)
+          
         }
     },
     "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information, especially their phone number
@@ -224,7 +238,11 @@ rzp1.on('payment.failed', function (response){
     rzp1.open();
 
     } catch (error) {
-      console.log(error)
+      Toaster(
+        error.response?.data?.message || "Payment initiation failed. Please try again.",
+        "error"
+      );
+      
     } finally {
       setpaymentLoading(false);
     }

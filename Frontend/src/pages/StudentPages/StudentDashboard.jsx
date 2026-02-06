@@ -10,7 +10,7 @@ const StudentDashboard = () => {
 
   const [courses, setCourses] = useState([]);
   const [loading, setLoading] = useState(true);
-console.log(user.enrolledCourses)
+
   /* ================= FETCH COURSES + LESSONS + PROGRESS ================= */
   useEffect(() => {
     if (!user?.enrolledCourses?.length) {
@@ -31,7 +31,7 @@ console.log(user.enrolledCourses)
     const fetchDashboardCourses = async () => {
       try {
         setLoading(true);
-        console.log(validCourseIds)
+        
         const results = await Promise.all(
           validCourseIds.map(async (courseId) => {
             /* === COURSE === */
@@ -90,7 +90,7 @@ console.log(user.enrolledCourses)
 
         setCourses(results);
       } catch (error) {
-        console.error(error);
+        
         Toaster(
           "Failed to load your dashboard courses",
           "error"

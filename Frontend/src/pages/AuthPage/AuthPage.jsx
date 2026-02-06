@@ -76,7 +76,7 @@ const AuthPage = () => {
           roleRoute
         );
       } catch (err) {
-        console.log(err);
+        
         const status = err?.response?.status;
         const message = err?.response?.data?.errors[0];
 
@@ -87,7 +87,7 @@ const AuthPage = () => {
           setShowForceLogin(true);
           return;
         } else {
-          console.log("hii");
+          
           Toaster(message || "Login failed", "error");
         }
       }

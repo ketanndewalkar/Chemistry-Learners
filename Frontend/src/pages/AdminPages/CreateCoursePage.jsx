@@ -61,14 +61,17 @@ const CreateCoursePage = () => {
         },
         withCredentials: true,
       });
-      console.log(res);
+      
       const createdCourse = res.data.data;
 
       Toaster("Course created successfully", "success");
 
       navigate(`/admin/courses/${createdCourse._id}/edit`);
     } catch (err) {
-        console.log(err)
+        Toaster(
+          err.response?.data?.message || "Failed to create course. Please try again.",
+          "error"
+        );
       const message =
         err?.response?.data?.message ||
         err?.message ||

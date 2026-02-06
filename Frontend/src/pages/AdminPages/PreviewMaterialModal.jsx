@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Document, Page, pdfjs } from "react-pdf";
 import { FiX } from "react-icons/fi";
+import { Toaster } from "../../utils/toaster";
 
 pdfjs.GlobalWorkerOptions.workerSrc =
   `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -19,10 +20,13 @@ const PreviewMaterialModal = ({ material, onClose }) => {
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/materials/access/${material._id}`,
           { withCredentials: true }
         );
-        console.log(res)
+        
         setPreviewUrl(res.data.data.url);
       } catch (err) {
-        console.error("Failed to fetch preview URL", err);
+        Toaster(
+          err.response?.data?.message || "Failed to load material preview.",
+          "error"
+        );
       } finally {
         setLoading(false);
       }

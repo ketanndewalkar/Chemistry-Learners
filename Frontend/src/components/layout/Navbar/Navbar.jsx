@@ -33,12 +33,12 @@ const Navbar = () => {
         <div className="w-full flex items-center justify-between">
 
           {/* LOGO */}
-          <div className="flex items-center gap-4">
+          <Link className="flex items-center gap-4">
             <img src={logo} alt="Logo" className="h-[clamp(2.2rem,3vw,2.6rem)] mix-blend-multiply" />
             <h1 className="font-signika font-semibold text-[clamp(1rem,1.4vw,1.25rem)] text-gray-800 whitespace-nowrap">
               Chemistry Learners
             </h1>
-          </div>
+          </Link>
 
           {/* DESKTOP NAV */}
           <ul className="hidden md:flex items-center gap-[clamp(1.5rem,3vw,2.5rem)]">

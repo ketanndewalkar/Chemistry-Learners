@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { Toaster } from "../../utils/toaster";
 
 const FreeMaterial = () => {
   const [materials, setMaterials] = useState([]);
@@ -35,7 +36,11 @@ const FreeMaterial = () => {
 
         setMaterials(finalData.filter(Boolean));
       } catch (err) {
-        console.error(err);
+        Toaster(
+          err.response?.data?.message || "Failed to fetch free materials.",
+          "error"
+        );
+        
       } finally {
         setLoading(false);
         setResolving(false);

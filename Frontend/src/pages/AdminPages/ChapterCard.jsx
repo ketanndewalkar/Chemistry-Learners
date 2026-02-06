@@ -3,6 +3,7 @@ import { CiLink } from "react-icons/ci";
 import LessonCard from "./LessonCard";
 import axios from "axios";
 import { useState } from "react";
+import { Toaster } from "../../utils/toaster";
 
 const ChapterCard = ({ chapter, onDelete, onLocalUpdate, onSaveTitle }) => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,10 @@ const ChapterCard = ({ chapter, onDelete, onLocalUpdate, onSaveTitle }) => {
       onLocalUpdate(chapter._id, { quizLink });
       setShowQuizModal(false);
     } catch (e) {
-      console.error(e);
+      Toaster(
+        e.response?.data?.message || "Failed to save quiz link.",
+        "error"
+      );
     } finally {
       setSavingQuiz(false);
     }
@@ -54,7 +58,10 @@ const ChapterCard = ({ chapter, onDelete, onLocalUpdate, onSaveTitle }) => {
         ),
       });
     } catch (error) {
-      console.error(error);
+      Toaster(
+        error.response?.data?.message || "Failed to add lesson.",
+        "error"
+      );
       onLocalUpdate(chapter._id, {
         lessons: optimisticLessons.filter((l) => l._id !== tempId),
       });
@@ -89,7 +96,10 @@ const deleteLesson = async (lessonId) => {
         { withCredentials: true }
       );
     } catch (error) {
-      console.error("Failed to delete lesson:", error);
+      Toaster(
+        error.response?.data?.message || "Failed to delete lesson.",
+        "error"
+      );
 
       onLocalUpdate(chapter._id, {
         lessons: previousLessons,

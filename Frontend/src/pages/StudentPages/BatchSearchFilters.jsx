@@ -4,6 +4,7 @@ import CourseCard from "./CourseCard";
 import axios from "axios";
 import { Oval } from "react-loader-spinner";
 import BackButton from "../../components/ui/BackButton";
+import { Toaster } from "../../utils/toaster";
 
 const BatchSearchFilters = () => {
   const [Courses, setCourses] = useState([]);
@@ -24,7 +25,11 @@ const BatchSearchFilters = () => {
         );
         setCourses(res.data.data || []);
       } catch (error) {
-        console.log(error);
+        Toaster(
+          error?.response?.data?.message || "Failed to fetch courses.",
+          "error"
+        );
+        setCourses([]);
       } finally {
         setLoading(false);
       }
