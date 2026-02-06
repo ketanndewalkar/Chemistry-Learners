@@ -147,34 +147,54 @@ export const emailVerification = asyncHandler(async (req, res) => {
      .update(token)
      .digest("hex");
 
-  const user = await User.findOne({
+  // 1️⃣ Normal verification try
+  let user = await User.findOne({
     emailVerificationToken: hashedToken,
     emailVerificationTokenExpiry: { $gt: Date.now() },
   });
 
+  // 2️⃣ Agar token se user nahi mila
   if (!user) {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid or expired token"
+
+    // 🔥 Check – koi user already verified to nahi?
+    const alreadyVerified = await User.findOne({
+      isEmailVerified: true
     });
+
+    if (alreadyVerified) {
+      return res.status(200).json(
+        new ApiResponse(
+          200,
+          "Email already verified",
+          null
+        )
+      );
+    }
+
+    throw new ApiError(400, "Invalid or expired token");
   }
 
+  // 3️⃣ First time verification
   user.isEmailVerified = true;
   user.emailVerificationToken = undefined;
   user.emailVerificationTokenExpiry = undefined;
 
   await user.save({ validateBeforeSave: false });
 
-  return res.status(200).json({
-    success: true,
-    message: "Email verified successfully"
-  });
+  return res.status(200).json(
+    new ApiResponse(
+      200,
+      "Email verified successfully",
+      null
+    )
+  );
 });
 
 
 
-export const resendEmailVerification = asyncHandler(async (req, res) => {
 
+export const resendEmailVerification = asyncHandler(async (req, res) => {
+ 
   const id = req.user._id;
 
   const user = await User.findById(id).select(
