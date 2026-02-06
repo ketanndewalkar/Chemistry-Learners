@@ -29,7 +29,7 @@ const BatchSearchFilters = () => {
           error?.response?.data?.message || "Failed to fetch courses.",
           "error"
         );
-        setCourses([]);
+        
       } finally {
         setLoading(false);
       }

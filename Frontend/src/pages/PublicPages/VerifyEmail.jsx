@@ -39,7 +39,7 @@ const VerifyEmail = () => {
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/auth/verify/${token}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify/${token}`
         );
 
         if (res.data?.success) {

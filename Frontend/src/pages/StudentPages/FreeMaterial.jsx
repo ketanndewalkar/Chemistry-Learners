@@ -20,7 +20,7 @@ const FreeMaterial = () => {
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/api/v1/free-materials/`
         );
-        console.log(res)
+        
         const list = res.data?.data || [];
 
         /* ===== Resolve each material object ===== */
