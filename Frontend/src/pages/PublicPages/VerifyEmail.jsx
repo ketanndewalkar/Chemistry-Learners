@@ -43,7 +43,7 @@ const VerifyEmail = () => {
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify/${token}`
       );
 
-      console.log("VERIFY RESPONSE 👉", res.data);
+
 
       if (isFinalized.current) return;
 
@@ -61,7 +61,7 @@ const VerifyEmail = () => {
 
     } catch (err) {
 
-      console.log("VERIFY ERROR 👉", err.response?.data);
+     
 
       // ❗ IMPORTANT
       if (isFinalized.current) return;
