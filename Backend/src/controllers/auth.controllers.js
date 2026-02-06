@@ -40,8 +40,8 @@ export const signup = asyncHandler(async (req, res) => {
       new ApiResponse(
         201,
         "Account created Succesfully,please verify your email",
-        resUser
-      )
+        resUser,
+      ),
     );
   sendVerificationEmail(email, token);
 });
@@ -71,13 +71,13 @@ export const signin = asyncHandler(async (req, res) => {
   const accessToken = jwt.sign(
     { userId: existingUser._id, sessionId },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
   );
 
   const refreshToken = jwt.sign(
     { userId: existingUser._id, sessionId },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
   );
   existingUser.refreshToken = refreshToken;
   await existingUser.save({ validateBeforeSave: false });
@@ -94,7 +94,7 @@ export const signin = asyncHandler(async (req, res) => {
     maxAge: 10 * 24 * 60 * 60 * 1000,
   };
   const existingUser1 = await User.findOne({ email }).select(
-    "-password -refreshToken"
+    "-password -refreshToken",
   );
 
   return res
@@ -107,7 +107,7 @@ export const signin = asyncHandler(async (req, res) => {
 export const getMe = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const user = await User.findById(userId).select(
-    "-password -refreshToken -emailVerificationToken  "
+    "-password -refreshToken -emailVerificationToken  ",
   );
   return res
     .status(200)
@@ -139,64 +139,85 @@ export const logOut = asyncHandler(async (req, res) => {
 });
 
 export const emailVerification = asyncHandler(async (req, res) => {
+
   const token = req.params.token;
 
-  if (!token) {
-    throw new ApiError(404, "No emailVerificationToken found");
-  }
-  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  const hashedToken = crypto
+     .createHash("sha256")
+     .update(token)
+     .digest("hex");
 
   const user = await User.findOne({
-    $and: [
-      { emailVerificationToken: hashedToken },
-      { emailVerificationTokenExpiry: { $gt: Date.now() } },
-    ],
-  }).select(
-    "-password -refreshToken -emailVerificationToken -emailVerificationTokenExpiry"
-  );
+    emailVerificationToken: hashedToken,
+    emailVerificationTokenExpiry: { $gt: Date.now() },
+  });
+
   if (!user) {
-    throw new ApiError(401, "Invalid token");
+    return res.status(400).json({
+      success: false,
+      message: "Invalid or expired token"
+    });
   }
 
   user.isEmailVerified = true;
   user.emailVerificationToken = undefined;
   user.emailVerificationTokenExpiry = undefined;
+
   await user.save({ validateBeforeSave: false });
 
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Email verified Succesfully", user));
+  return res.status(200).json({
+    success: true,
+    message: "Email verified successfully"
+  });
 });
 
+
+
 export const resendEmailVerification = asyncHandler(async (req, res) => {
+
   const id = req.user._id;
 
   const user = await User.findById(id).select(
-    "-password -refreshToken -emailVerificationToken "
+    "-password -refreshToken"
   );
-  console.log(user);
+
+ 
+
   if (!user) {
     throw new ApiError(401, "Invalid token");
   }
+
   if (user.isEmailVerified) {
     throw new ApiError(401, "Email already verified");
   }
-  const emailVerificationToken = crypto.randomBytes(32).toString("hex");
-  console.log(emailVerificationToken);
+
+  const emailVerificationToken =
+      crypto.randomBytes(32).toString("hex");
 
   const hashedemailVerificationToken = crypto
     .createHash("sha256")
     .update(emailVerificationToken)
     .digest("hex");
 
+
+
   user.emailVerificationToken = hashedemailVerificationToken;
-  user.emailVerificationTokenExpiry = Date.now() + 10 * 60 * 1000;
-  await user.save();
-  await sendVerificationEmail(user.email, emailVerificationToken);
-  return res
-    .status(200)
-    .json(new ApiResponse(200, "Email Verification link sent"));
+
+  user.emailVerificationTokenExpiry =
+      new Date(Date.now() + 10 * 60 * 1000);
+
+  await user.save({ validateBeforeSave: false });
+
+  await sendVerificationEmail(
+      user.email,
+      emailVerificationToken   
+  );
+
+  return res.status(200).json(
+    new ApiResponse(200, "Email Verification link sent")
+  );
 });
+
 
 export const refreshAccessToken = asyncHandler(async (req, res) => {
   const { refreshToken } = req.cookies;
@@ -231,13 +252,13 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
   const newAccessToken = jwt.sign(
     { userId: user._id, sessionId: user.activeSessionId },
     process.env.ACCESS_TOKEN_SECRET,
-    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
+    { expiresIn: process.env.ACCESS_TOKEN_EXPIRY },
   );
 
   const newRefreshToken = jwt.sign(
     { userId: user._id, sessionId: user.activeSessionId },
     process.env.REFRESH_TOKEN_SECRET,
-    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY }
+    { expiresIn: process.env.REFRESH_TOKEN_EXPIRY },
   );
 
   user.refreshToken = newRefreshToken;
@@ -264,7 +285,7 @@ export const refreshAccessToken = asyncHandler(async (req, res) => {
     .json(
       new ApiResponse(200, "New tokens generated", {
         accessToken: newAccessToken,
-      })
+      }),
     );
 });
 
@@ -288,7 +309,7 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   await user.save();
   const resUser = await User.findById(user._id).select(
-    "-refreshToken -password"
+    "-refreshToken -password",
   );
 
   return res

@@ -44,7 +44,7 @@ const VerifyEmail = () => {
 
         if (res.data?.status === 200) {
           setStatus("success");
-          setMessage(res.data.data.message || "Email verified successfully.");
+          setMessage(res.data.message || "Email verified successfully.");
           Toaster("Email verified successfully!", "success");
         }
       } catch (err) {
