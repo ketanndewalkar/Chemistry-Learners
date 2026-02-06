@@ -38,7 +38,7 @@ import LecturePlayerPage from "./pages/StudentPages/LecturePlayerPage";
 import MyPurchases from "./pages/StudentPages/MyPurchases";
 import FreeMaterialPage from "./pages/StudentPages/FreeMaterialPage";
 import FreeMaterial from "./pages/StudentPages/FreeMaterial";
-
+ 
 /* ---------- ADMIN PAGES ---------- */
 import AdminDashboard from "./pages/AdminPages/DashboardPage";
 import CoursesPage from "./pages/AdminPages/CoursesPage";
