@@ -23,7 +23,7 @@ import Profile from "./components/ui/Profile";
 /* ---------- AUTH ---------- */
 import AuthPage from "./pages/AuthPage/AuthPage";
 import ForgotPassword from "./pages/AuthPage/ForgotPassword";
-import Verifyemail from "./pages/PublicPages/Verifyemail";
+import VerifyEmail from "./pages/PublicPages/VerifyEmail";
 
 /* ---------- PUBLIC PAGES ---------- */
 import Home from "./pages/Home/Home";
@@ -62,7 +62,7 @@ function App() {
         { path: "/", element: <Home /> },
         { path: "/about", element: <About /> },
         { path: "/contact", element: <Contact /> },
-        { path: "/verify-email/:token", element: <Verifyemail /> }, // ✅ FIXED
+        { path: "/verify-email/:token", element: <VerifyEmail /> }, // ✅ FIXED
       ],
     },
     { path: "/auth", element: <AuthPage /> },
