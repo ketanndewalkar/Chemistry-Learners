@@ -213,7 +213,7 @@ import { useAuth } from "./Context/AuthContext";
 import FreeMaterialPage from "./pages/StudentPages/FreeMaterialPage";
 import AdminFreeMaterial from "./pages/AdminPages/AdminFreeMaterial";
 import FreeMaterial from "./pages/StudentPages/FreeMaterial";
-import VerifyEmail from "./pages/PublicPages/Verifyemail";
+import Verifyemail from "./pages/PublicPages/Verifyemail";
 
 function App() {
   const { user, loading } = useAuth();
@@ -230,7 +230,7 @@ function App() {
         
       ],
     },
-    {path:"/verify-email/:token",element:<><VerifyEmail/></>},
+    {path:"/verify-email/:token",element:<><Verifyemail/></>},
     { path: "/auth", element: <AuthPage /> },
     { path: "/auth/forget-password", element: <ForgotPassword /> },
   ];
