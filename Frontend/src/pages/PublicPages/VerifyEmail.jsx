@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import gsap from "gsap";
 import { Check, X, Loader2 } from "lucide-react";
@@ -10,8 +10,7 @@ const Verifyemail = () => {
   const iconRef = useRef(null);
   const textRef = useRef(null);
 
-  const [params] = useSearchParams();
-  const token = params.get("token");
+  const {token} = useParams();
 
   const [status, setStatus] = useState("loading");
   const [message, setMessage] = useState("We are securely verifying your email.");
