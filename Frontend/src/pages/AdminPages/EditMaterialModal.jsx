@@ -36,9 +36,7 @@ const EditMaterialModal = ({ material, onClose, onSave }) => {
         {/* TITLE */}
         <input
           value={form.title}
-          onChange={(e) =>
-            setForm({ ...form, title: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, title: e.target.value })}
           className="w-full border rounded px-3 py-2 text-sm"
           placeholder="Title"
         />
@@ -46,29 +44,50 @@ const EditMaterialModal = ({ material, onClose, onSave }) => {
         {/* DESCRIPTION */}
         <textarea
           value={form.description}
-          onChange={(e) =>
-            setForm({ ...form, description: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, description: e.target.value })}
           className="w-full border rounded px-3 py-2 text-sm"
           placeholder="Description"
         />
 
         {/* URL or FILE (PDF ONLY) */}
         {material.materialType === "pdf" ? (
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={(e) =>
-              setForm({ ...form, url: e.target.files?.[0] || null })
-            }
-            className="w-full border rounded px-3 py-2 text-sm"
-          />
+          <div className="w-full">
+            {/* Hidden native input */}
+            <input
+              type="file"
+              id="pdfUploadBtn"
+              accept="application/pdf"
+              onChange={(e) =>
+                setForm({ ...form, url: e.target.files?.[0] || null })
+              }
+              className="hidden"
+            />
+
+            {/* Custom upload button */}
+            <label
+              htmlFor="pdfUploadBtn"
+              className="flex items-center justify-center gap-2
+               w-fit cursor-pointer rounded-md
+               border border-gray-300 bg-white
+               px-4 py-2 text-sm font-medium
+               hover:border-blue-500 hover:text-blue-600
+               transition"
+            >
+              Upload PDF
+            </label>
+
+            {/* Show selected file */}
+            {form.url && (
+              <p className="mt-2 text-xs text-gray-600 truncate">
+                Selected file:{" "}
+                <span className="font-medium">{form.url.name}</span>
+              </p>
+            )}
+          </div>
         ) : (
           <input
             value={form.url}
-            onChange={(e) =>
-              setForm({ ...form, url: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, url: e.target.value })}
             className="w-full border rounded px-3 py-2 text-sm"
             placeholder="URL"
           />

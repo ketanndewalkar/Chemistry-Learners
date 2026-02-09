@@ -68,7 +68,7 @@ const AdminFreeMaterial = () => {
       }
 
       if (form.materialType === "pdf") {
-        formData.append("file", form.file);
+        formData.append("url", form.file);
       }
 
       await axios.post(
@@ -255,6 +255,7 @@ const AdminFreeMaterial = () => {
                 type="text"
                 name="title"
                 required
+                placeholder="Title"
                 value={form.title}
                 onChange={handleChange}
                 className="w-full rounded-md border px-3 py-2 text-sm"
@@ -262,6 +263,7 @@ const AdminFreeMaterial = () => {
 
               <textarea
                 name="description"
+                placeholder="Description"
                 value={form.description}
                 onChange={handleChange}
                 className="w-full rounded-md border px-3 py-2 text-sm"
@@ -269,6 +271,7 @@ const AdminFreeMaterial = () => {
 
               <select
                 name="materialType"
+                placeholder="Material Type"
                 value={form.materialType}
                 onChange={handleChange}
                 className="w-full rounded-md border px-3 py-2 text-sm"
@@ -289,15 +292,39 @@ const AdminFreeMaterial = () => {
               )}
 
               {form.materialType === "pdf" && (
-                <input
-                  type="file"
-                  name="file"
-                  accept="application/pdf"
-                  required
-                  onChange={handleChange}
-                  className="w-full text-sm"
-                />
-              )}
+  <div className="w-full">
+    {/* Hidden file input */}
+    <input
+      type="file"
+      id="pdfUpload"
+      name="file"
+      accept="application/pdf"
+      required
+      onChange={handleChange}
+      className="hidden"
+    />
+
+    {/* Custom button */}
+    <label
+      htmlFor="pdfUpload"
+      className="flex items-center justify-center gap-3 w-fit cursor-pointer
+                 rounded-lg border border-dashed border-gray-300
+                 px-4 py-3 text-sm font-medium
+                 hover:border-blue-500 hover:text-blue-600
+                 transition-all"
+    >
+    Upload PDF File
+    </label>
+
+    {/* Selected file name */}
+    {form.file && (
+      <p className="mt-2 text-xs text-gray-600 truncate">
+        Selected file: <span className="font-medium">{form.file.name}</span>
+      </p>
+    )}
+  </div>
+)}
+
 
               <div className="flex justify-end gap-3 pt-2">
                 <button

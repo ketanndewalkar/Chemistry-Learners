@@ -49,15 +49,16 @@ const AddMaterialModal = ({ lessonId, onClose, onAdded }) => {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-        }
+        },
       );
 
       onAdded(res.data.data);
       onClose();
     } catch (err) {
       Toaster(
-        err.response?.data?.message || "Failed to add material. Please try again.",
-        "error"
+        err.response?.data?.message ||
+          "Failed to add material. Please try again.",
+        "error",
       );
     } finally {
       setLoading(false);
@@ -115,15 +116,36 @@ const AddMaterialModal = ({ lessonId, onClose, onAdded }) => {
 
         {/* PDF FILE INPUT */}
         {materialType === "pdf" && (
-          
-          <input
-            type="file"
-            accept="application/pdf"
-            className="w-full text-sm"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          
-          
+          <div className="w-full">
+            {/* Hidden native input */}
+            <input
+              type="file"
+              id="pdfFileUpload"
+              accept="application/pdf"
+              className="hidden"
+              onChange={(e) => setFile(e.target.files?.[0] || null)}
+            />
+
+            {/* Custom button */}
+            <label
+              htmlFor="pdfFileUpload"
+              className="flex items-center justify-center gap-2
+               w-fit cursor-pointer rounded-md
+               border border-gray-300 bg-white
+               px-4 py-2 text-sm font-medium
+               hover:border-blue-500 hover:text-blue-600
+               transition"
+            >
+              Upload PDF
+            </label>
+
+            {/* Selected file name */}
+            {file && (
+              <p className="mt-2 text-xs text-gray-600 truncate">
+                Selected file: <span className="font-medium">{file.name}</span>
+              </p>
+            )}
+          </div>
         )}
 
         <label className="flex items-center gap-2 text-sm">
@@ -158,4 +180,3 @@ const AddMaterialModal = ({ lessonId, onClose, onAdded }) => {
 };
 
 export default AddMaterialModal;
-
