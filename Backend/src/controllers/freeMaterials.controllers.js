@@ -50,9 +50,7 @@ export const getAllFreeMaterials = asyncHandler(async (req, res) => {
     "uploadedBy",
     "name email"
   );
-  if (freeMaterials.length === 0) {
-    throw new ApiError(404, "No free material found");
-  }
+  
   res
     .status(200)
     .json(
