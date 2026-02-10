@@ -241,7 +241,7 @@ rzp1.on('payment.failed', function (response){
 
     } catch (error) {
       Toaster(
-        error.response?.data?.message || "Payment initiation failed. Please try again.",
+        error.response?.data?.errors[0] || "Payment initiation failed. Please try again.",
         "error"
       );
       
