@@ -87,8 +87,10 @@ const AuthPage = () => {
           setShowForceLogin(true);
           return;
         } else {
-          
-          Toaster(message || "Login failed", "error");
+          Toaster(
+            message || "Login failed. Please check your credentials.",
+            "error"
+          );
         }
       }
     }

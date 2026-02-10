@@ -37,7 +37,7 @@ const FreeMaterial = () => {
         setMaterials(finalData.filter(Boolean));
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to fetch free materials.",
+          err.response?.data?.errors[0] || "Failed to fetch free materials.",
           "error"
         );
         

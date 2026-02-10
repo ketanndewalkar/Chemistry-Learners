@@ -57,7 +57,7 @@ const CourseDetailPage = () => {
         }
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to fetch course details.",
+          err.response?.data?.errors[0] || "Failed to fetch course details.",
           "error"
         );
       } finally {
@@ -82,8 +82,9 @@ const CourseDetailPage = () => {
         setChapters(res.data.data);
         setChaptersFetched(true);
       } catch (err) {
+        console.log(err)
         Toaster(
-          err.response?.data?.message || "Failed to fetch chapters.",
+          err.response?.data?.errors[0] || "Failed to fetch chapters.",
           "error"
         );
       } finally {
@@ -119,7 +120,7 @@ const CourseDetailPage = () => {
         setLessonsFetched(true);
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to fetch lessons.",
+          err.response?.data?.errors[0] || "Failed to fetch lessons.",
           "error"
         );
         
@@ -155,7 +156,7 @@ const CourseDetailPage = () => {
         setResourcesFetched(true);
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to fetch resources.",
+          err.response?.data?.errors[0] || "Failed to fetch resources.",
           "error"
         );
        

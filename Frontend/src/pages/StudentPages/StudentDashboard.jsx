@@ -92,7 +92,7 @@ const StudentDashboard = () => {
       } catch (error) {
         
         Toaster(
-          "Failed to load your dashboard courses",
+          error.response?.data?.errors[0] || "Failed to fetch dashboard courses.",
           "error"
         );
       } finally {

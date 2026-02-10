@@ -50,7 +50,7 @@ const VerifyEmail = () => {
         
         setStatus("error");
         setMessage(
-          err.response?.data?.message ||
+          err.response?.data?.errors[0] ||
             "This verification link is invalid or expired."
         );
         Toaster(

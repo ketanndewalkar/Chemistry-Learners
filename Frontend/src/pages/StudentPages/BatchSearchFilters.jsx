@@ -26,7 +26,7 @@ const BatchSearchFilters = () => {
         setCourses(res.data.data || []);
       } catch (error) {
         Toaster(
-          error?.response?.data?.message || "Failed to fetch courses.",
+          error?.response?.data?.errors[0] || "Failed to fetch courses.",
           "error"
         );
         

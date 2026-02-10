@@ -81,8 +81,7 @@ const MyPurchases = () => {
         );
         setCourses(results);
       } catch (error) {
-        
-        Toaster("Failed to load purchased courses", "error");
+        Toaster(error.response?.data?.errors[0] || "Failed to fetch purchased courses", "error");
       } finally {
         setLoading(false);
       }

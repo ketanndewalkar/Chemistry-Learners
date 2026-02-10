@@ -33,7 +33,7 @@ const LecturePlayerPage = () => {
         setMaterials(res.data.data || []);
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to fetch materials.",
+          err.response?.data?.errors[0] || "Failed to fetch materials.",
           "error"
         );
         
@@ -77,7 +77,7 @@ const LecturePlayerPage = () => {
         setActiveVideo(firstVideo || null);
       } catch (err) {
         Toaster(
-          err.response?.data?.message || "Failed to resolve material URLs.",
+          err.response?.data?.errors[0] || "Failed to resolve material URLs.",
           "error"
         );
       } finally {
@@ -115,7 +115,7 @@ const LecturePlayerPage = () => {
       
     } catch (error) {
       Toaster(
-        error.response?.data?.message || "Failed to mark as complete.",
+        error.response?.data?.errors[0] || "Failed to mark as complete.",
         "error"
       );
       
