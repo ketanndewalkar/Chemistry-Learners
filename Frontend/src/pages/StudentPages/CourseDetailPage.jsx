@@ -14,6 +14,7 @@ import { useAuth } from "../../Context/AuthContext";
 import { Toaster } from "../../utils/toaster";
 import { ArrowLeft } from "lucide-react";
 import BackButton from "../../components/ui/BackButton";
+import { FiX } from "react-icons/fi";
 
 /* ===========================================================
    MAIN CONTAINER
@@ -416,8 +417,16 @@ const CourseLessons = ({ chapters, lessonsMap }) => {
 /* ===========================================================
    RESOURCES TAB (ATTACHMENT STYLE)
 =========================================================== */
+
+
+
 const CourseResources = ({ resources }) => {
-  if (!resources.length) return <p className="text-sm text-gray-500">No resources available.</p>;
+  if (!resources.length)
+    return <p className="text-sm text-gray-500">No resources available.</p>;
+
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
 
   const getIcon = (type) => {
     if (type === "video") return <FiVideo />;
@@ -425,46 +434,115 @@ const CourseResources = ({ resources }) => {
     return <FiFileText />;
   };
 
+  const openPreview = async (id) => {
+    try {
+      setOpen(true);
+      setLoading(true);
+
+      const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/v1/materials/access/${id}`,{withCredentials:true});
+      console.log(data)
+      setPreviewUrl(data.data?.url || "");
+    } catch (error) {
+      console.error("Preview fetch failed:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {resources.map((res) => (
-        <div
-          key={res._id}
-          className="rounded-xl border border-gray-200 p-4 bg-gray-50 hover:bg-white transition"
-        >
-          <div className="flex items-start gap-3">
-            <div className="text-blue-600 text-lg">
-              {getIcon(res.materialType)}
-            </div>
+    <>
+      {/* Resource Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-md:gap-3">
+        {resources.map((res) => (
+          <div
+            key={res._id}
+            onClick={() => res.isPreview && openPreview(res._id)}
+            className={`rounded-xl border border-gray-200 bg-gray-50
+              p-4 max-md:p-3
+              transition-all duration-300
+              hover:bg-white hover:shadow-md hover:-translate-y-0.5
+              max-md:hover:shadow-none max-md:hover:translate-y-0
+              ${res.isPreview ? "cursor-pointer" : "cursor-default"}`}
+          >
+            <div className="flex gap-3 max-md:gap-2">
+              <div className="text-blue-600 text-lg max-md:text-base mt-0.5">
+                {getIcon(res.materialType)}
+              </div>
 
-            <div className="flex-1">
-              <p className="font-medium text-sm text-gray-800">
-                {res.title}
-              </p>
-
-              {res.description && (
-                <p className="text-xs text-gray-500 mt-1">
-                  {res.description}
+              <div className="flex-1">
+                <p className="font-medium text-sm max-md:text-[13px] text-gray-800">
+                  {res.title}
                 </p>
-              )}
 
-              <div className="mt-3 flex items-center gap-2 text-xs text-gray-500">
-                <span className="px-2 py-0.5 rounded-full bg-gray-200">
-                  {res.materialType}
-                </span>
-
-                {res.isPreview && (
-                  <span className="flex items-center gap-1 text-green-600">
-                    <FiEye /> Preview
-                  </span>
+                {res.description && (
+                  <p className="text-xs max-md:text-[11px] text-gray-500 mt-1 line-clamp-2">
+                    {res.description}
+                  </p>
                 )}
+
+                <div className="mt-3 max-md:mt-2 flex items-center gap-2 text-xs max-md:text-[11px] text-gray-500">
+                  <span className="px-2 py-0.5 rounded-full bg-gray-200 capitalize">
+                    {res.materialType}
+                  </span>
+
+                  {res.isPreview && (
+                    <span className="flex items-center gap-1 text-green-600">
+                      <FiEye /> Preview
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
           </div>
+        ))}
+      </div>
+
+      {/* Preview Modal */}
+      {open && (
+        <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">
+          <div
+            className="bg-white rounded-xl shadow-xl overflow-hidden
+              w-full max-w-4xl h-[75vh]
+              max-md:max-w-full max-md:h-full max-md:rounded-none"
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 py-3 max-md:px-3 max-md:py-2 border-b">
+              <p className="text-sm max-md:text-xs font-medium text-gray-700">
+                Resource Preview
+              </p>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  setPreviewUrl("");
+                }}
+                className="text-gray-500 hover:text-gray-800 transition"
+              >
+                <FiX size={18} />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="w-full h-full bg-gray-100">
+              {loading ? (
+                <div className="flex h-full items-center justify-center">
+                  <div className="w-7 h-7 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+                </div>
+              ) : (
+                <iframe
+                  src={previewUrl}
+                  title="Resource Preview"
+                  className="w-full h-full border-none"
+                />
+              )}
+            </div>
+          </div>
         </div>
-      ))}
-    </div>
+      )}
+    </>
   );
 };
+
+
+
 
 export default CourseDetailPage;
