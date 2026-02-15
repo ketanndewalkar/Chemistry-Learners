@@ -141,25 +141,30 @@ export const logOut = asyncHandler(async (req, res) => {
 export const emailVerification = asyncHandler(async (req, res) => {
   const token = req.params.token;
 
-  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
 
-  let user = await User.findOne({
+  const user = await User.findOne({
     emailVerificationToken: hashedToken,
-    emailVerificationTokenExpiry: { $gt: Date.now() },
   });
 
-  if (!user) {
-    const alreadyVerified = await User.findOne({
-      isEmailVerified: true,
-    });
+ if (!user) {
+  return res
+    .status(200)
+    .json(new ApiResponse(200, "Email already verified", null));
+}
 
-    if (alreadyVerified) {
-      return res
-        .status(200)
-        .json(new ApiResponse(200, "Email already verified", null));
-    }
 
-    throw new ApiError(400, "Invalid or expired token");
+  if (user.isEmailVerified) {
+    return res
+      .status(200)
+      .json(new ApiResponse(200, "Email already verified", null));
+  }
+
+  if (user.emailVerificationTokenExpiry < Date.now()) {
+    throw new ApiError(400, "Invalid or expired verification token");
   }
 
   user.isEmailVerified = true;
@@ -172,6 +177,7 @@ export const emailVerification = asyncHandler(async (req, res) => {
     .status(200)
     .json(new ApiResponse(200, "Email verified successfully", null));
 });
+
 
 export const resendEmailVerification = asyncHandler(async (req, res) => {
   const id = req.user._id;

@@ -9,8 +9,9 @@ const VerifyEmail = () => {
   const containerRef = useRef(null);
   const iconRef = useRef(null);
   const textRef = useRef(null);
+  const hasVerified = useRef(false);
 
-  const { token } = useParams(); // ✅ CORRECT: path param
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const [status, setStatus] = useState("loading");
@@ -18,7 +19,6 @@ const VerifyEmail = () => {
     "We are securely verifying your email."
   );
 
-  /* ENTRY ANIMATION */
   useEffect(() => {
     gsap.fromTo(
       containerRef.current,
@@ -27,8 +27,10 @@ const VerifyEmail = () => {
     );
   }, []);
 
-  /* VERIFY EMAIL */
   useEffect(() => {
+    if (hasVerified.current) return;
+    hasVerified.current = true;
+
     const verify = async () => {
       if (!token) {
         setStatus("error");
@@ -39,18 +41,17 @@ const VerifyEmail = () => {
 
       try {
         const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify/${token}`
+          `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/verify/${token}`,
+          { timeout: 10000 }
         );
 
-        if (res.data?.status === 200) {
-          setStatus("success");
-          setMessage(res.data.data.message || "Email verified successfully.");
-        }
+        setStatus("success");
+        setMessage(res.data?.message || "Email verified successfully.");
       } catch (err) {
-        
         setStatus("error");
         setMessage(
-          err.response?.data?.errors[0] ||
+          err.response?.data?.errors?.[0] ||
+            err.response?.data?.message ||
             "This verification link is invalid or expired."
         );
         Toaster(
@@ -64,7 +65,6 @@ const VerifyEmail = () => {
     verify();
   }, [token]);
 
-  /* ICON + TEXT ANIMATION */
   useEffect(() => {
     if (!iconRef.current || !textRef.current) return;
 
@@ -81,13 +81,19 @@ const VerifyEmail = () => {
     );
   }, [status]);
 
+  useEffect(() => {
+    if (status === "success") {
+      const timer = setTimeout(() => navigate("/auth"), 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [status, navigate]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#F5FAFF] to-[#E8F2FF] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-linear-to-b from-[#F5FAFF] to-[#E8F2FF] px-4">
       <div
         ref={containerRef}
         className="w-full max-w-lg bg-white rounded-xl shadow-[0_20px_60px_rgba(15,23,42,0.08)] px-10 py-12 text-center"
       >
-        {/* ICON */}
         <div
           ref={iconRef}
           className={`mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full ${
@@ -105,7 +111,6 @@ const VerifyEmail = () => {
           {status === "error" && <X className="h-7 w-7" />}
         </div>
 
-        {/* TEXT */}
         <div ref={textRef}>
           <h1 className="text-2xl font-semibold text-[#0F172A] mb-2">
             {status === "loading" && "Verifying Email"}
@@ -116,7 +121,6 @@ const VerifyEmail = () => {
           <p className="text-sm text-[#64748B] mb-8">{message}</p>
         </div>
 
-        {/* ACTIONS */}
         {status === "success" && (
           <Link
             to="/auth"
